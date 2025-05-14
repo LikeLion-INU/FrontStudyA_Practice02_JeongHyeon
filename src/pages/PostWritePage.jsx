@@ -30,6 +30,7 @@ export default function PostWritePage() {
 
   const navigate = useNavigate();
 
+  // 게시글 작성 완료 버튼 클릭 시 실행되는 함수
   const handleSubmit = () => {
     if (title && content) {
       const newPost = {

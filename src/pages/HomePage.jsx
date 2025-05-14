@@ -18,11 +18,15 @@ const Container = styled.div`
 export default function HomePage() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+
+  // 컴포넌트가 마운트될 때 localStorage에서 게시글 데이터를 불러옴
   useEffect(() => {
     const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
     setPosts(savedPosts);
   }
   , []);
+  
+  // 게시글 클릭 시 해당 게시글의 상세 페이지로 이동
   const handlePostClick = (post) => {
     navigate(`/posts/${post.id}`);
   }

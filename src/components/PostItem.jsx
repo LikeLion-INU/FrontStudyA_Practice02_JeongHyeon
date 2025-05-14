@@ -13,8 +13,6 @@ const ItemContainer = styled.div`
   border: 1px solid #ccc;
 
   cursor: pointer;
-
-  background-color:rgb(255, 255, 255);
 `;
 
 const Title = styled.div`

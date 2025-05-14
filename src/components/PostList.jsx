@@ -8,7 +8,7 @@ const ListContainer = styled.div`
   gap: 2rem;
 
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column-reverse; // 최신 글이 위로 오도록
   align-items: center;
 `;
 

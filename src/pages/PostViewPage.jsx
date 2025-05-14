@@ -70,6 +70,7 @@ export default function PostViewPage() {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState(''); 
 
+  // 컴포넌트가 마운트될 때 localStorage에서 게시글과 댓글 데이터를 불러옴
   useEffect(() => {
     const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
     const foundPost = savedPosts.find((post) => post.id === parseInt(id));
@@ -79,6 +80,7 @@ export default function PostViewPage() {
     setComments(savedComments);
   }, [id]);
 
+  // 게시글이 없을 경우
   if (!post) {
     return (
       <Container>
@@ -87,6 +89,7 @@ export default function PostViewPage() {
     );
   }
 
+  // 댓글 작성 시 localStorage에 저장
   const handleCommentSubmit = (comment) => {
     if (comment) {
       const newComment = {
@@ -101,10 +104,19 @@ export default function PostViewPage() {
     }
   }
 
+  // 댓글 삭제 시 localStorage에서 삭제
   const handleCommentDelete = (commentId) => {
     const updatedComments = comments.filter((comment) => comment.id !== commentId);
     localStorage.setItem(`comments-${id}`, JSON.stringify(updatedComments));
     setComments(updatedComments);
+  }
+
+  // 게시글 삭제 시 localStorage에서 삭제
+  const handlePostDelete = () => {
+    const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+    const updatedPosts = savedPosts.filter((p) => p.id !== post.id);
+    localStorage.setItem('posts', JSON.stringify(updatedPosts));
+    navigate('/');
   }
 
   return (
@@ -112,12 +124,7 @@ export default function PostViewPage() {
       <PostContainer>
         <PostTitle>{post.title}</PostTitle>
         <DeleteWrapper>
-          <DeleteButton onClick={() => {
-            const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-            const updatedPosts = savedPosts.filter((p) => p.id !== post.id);
-            localStorage.setItem('posts', JSON.stringify(updatedPosts));
-            navigate('/');
-          }}>글 삭제</DeleteButton>
+          <DeleteButton onClick={handlePostDelete}>글 삭제</DeleteButton>
         </DeleteWrapper>
         <Divider />
         <PostContent>{post.content}</PostContent>
