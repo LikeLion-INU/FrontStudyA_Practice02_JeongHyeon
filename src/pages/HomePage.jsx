@@ -1,18 +1,35 @@
-import { Link } from "react-router-dom";
-import Header from "../components/Header";
+import styled from "styled-components";
+import PostList from "../components/PostList";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 60vw;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 export default function HomePage() {
-return (
-    <>
-        <Header />
-        <div>
-            <h1>홈페이지</h1>
-            <Link to="/post/1">게시글 1</Link>
-            <br />
-            <Link to="/post/2">게시글 2</Link>
-            <br />
-            <Link to="/post/3">게시글 3</Link>
-        </div>
-    </>
-);
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+    setPosts(savedPosts);
+  }
+  , []);
+  const handlePostClick = (post) => {
+    navigate(`/posts/${post.id}`);
+  }
+
+  return (
+    <Container>
+        <PostList posts={posts} onPostClick={handlePostClick} />
+    </Container>
+  );
 }
