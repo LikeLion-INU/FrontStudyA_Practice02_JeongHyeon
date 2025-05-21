@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentList from "../components/CommentList";
 import CommentEdit from "../components/CommentEdit";
-import Button from "../components/Button";
+import useAuthStore from "../store/authStore";
+import PostDetail from "../components/PostDetail";
+import axios from "../api/axiosInstance";
 
 const Container = styled.div`
   width: 100%;
@@ -15,44 +17,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   height: 100vh;
-`;
-
-const PostTitle = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 1rem;
-`;
-
-const PostContent = styled.p`
-  font-size: 16px;
-  white-space: pre-line;
-  line-height: 1.5;
-  width: 100%;
-  min-height: 50vh;
-`;
-
-const PostContainer = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  padding: 1rem;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const DeleteButton = styled(Button)`
-  background-color:rgb(236, 51, 51);
-
-  &:hover {
-    background-color: #94a3b8;
-  }
-`;
-
-const DeleteWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
 `;
 
 const Divider = styled.hr`
@@ -69,15 +33,21 @@ export default function PostViewPage() {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState(''); 
+  const { user } = useAuthStore();
 
-  // 컴포넌트가 마운트될 때 localStorage에서 게시글과 댓글 데이터를 불러옴
+  const isOwner = post && user?.id === post.userId;
+
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-    const foundPost = savedPosts.find((post) => post.id === parseInt(id));
-    setPost(foundPost);
+    const fetchPost = async () => {
+      try {
+        const res = await axios.get(`/660/posts/${id}`);
+        setPost(res.data);
+      } catch (err) {
+        alert("게시글을 불러오는 데 실패했습니다.");
+      }
+    };
 
-    const savedComments = JSON.parse(localStorage.getItem(`comments-${id}`)) || [];
-    setComments(savedComments);
+    fetchPost();
   }, [id]);
 
   // 게시글이 없을 경우
@@ -107,28 +77,28 @@ export default function PostViewPage() {
   // 댓글 삭제 시 localStorage에서 삭제
   const handleCommentDelete = (commentId) => {
     const updatedComments = comments.filter((comment) => comment.id !== commentId);
+
     localStorage.setItem(`comments-${id}`, JSON.stringify(updatedComments));
+
+    alert("댓글이 삭제되었습니다.");
+
     setComments(updatedComments);
+    
   }
 
-  // 게시글 삭제 시 localStorage에서 삭제
-  const handlePostDelete = () => {
-    const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-    const updatedPosts = savedPosts.filter((p) => p.id !== post.id);
-    localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    navigate('/');
+  const handlePostDelete = async () => {
+    try {
+      await axios.delete(`/660/posts/${post.id}`);
+      alert("게시글이 삭제되었습니다.");
+      navigate("/");
+    } catch (error) {
+      alert("게시글 삭제 실패");
+    }
   }
 
   return (
     <Container>
-      <PostContainer>
-        <PostTitle>{post.title}</PostTitle>
-        <DeleteWrapper>
-          <DeleteButton onClick={handlePostDelete}>글 삭제</DeleteButton>
-        </DeleteWrapper>
-        <Divider />
-        <PostContent>{post.content}</PostContent>
-      </PostContainer>
+      <PostDetail post={post} isOwner={isOwner} onDelete={handlePostDelete} onEdit = {() => navigate(`/edit/${post.id}`)} />
       <Divider />
       <CommentEdit
         comment={comment}

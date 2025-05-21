@@ -2,6 +2,8 @@ import styled from "styled-components";
 import PostList from "../components/PostList";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "../api/axiosInstance";
+import useAuthStore from "../store/authStore";
 
 const Container = styled.div`
   width: 100%;
@@ -18,13 +20,23 @@ const Container = styled.div`
 export default function HomePage() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const { user } = useAuthStore();
 
-  // 컴포넌트가 마운트될 때 localStorage에서 게시글 데이터를 불러옴
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-    setPosts(savedPosts);
+    if (!user?.id) return;
+
+    const fetchPosts = async () => {
+      try {
+        const res = await axios.get("/660/posts");
+        setPosts(res.data);
+      } catch (err) {
+        alert("게시글 목록을 불러오는 데 실패했습니다.");
+      }
+    };
+
+    fetchPosts();
   }
-  , []);
+  , [user, navigate]);
   
   // 게시글 클릭 시 해당 게시글의 상세 페이지로 이동
   const handlePostClick = (post) => {
@@ -33,7 +45,11 @@ export default function HomePage() {
 
   return (
     <Container>
+      {!user?.id ? (
+        <h1>로그인 후 이용해주세요.</h1>
+      ) : (
         <PostList posts={posts} onPostClick={handlePostClick} />
+      )}
     </Container>
   );
 }

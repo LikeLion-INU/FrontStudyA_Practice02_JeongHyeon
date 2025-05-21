@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "test",
+      "password": "$2b$10$GzxwOum.AXDY0zSmer0CJeMiIVWzG6Bo20TRPlgsg73yDF.DwANJe",
+      "name": "test"
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "sss",
+      "content": "ssss",
+      "userId": 1,
+      "createdAt": "2025-05-20T19:18:42.030Z"
+    },
+    {
+      "id": 2,
+      "title": "제목",
+      "content": "내용",
+      "userId": 1,
+      "createdAt": "2025-05-20T20:04:08.907Z"
+    },
+    {
+      "id": 3,
+      "title": "to rmf",
+      "content": "sodyd",
+      "userId": 1,
+      "createdAt": "2025-05-20T21:11:11.525Z"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import useAuthStore from "../store/authStore";
 
 const ItemContainer = styled.div`
   width: 100%;
