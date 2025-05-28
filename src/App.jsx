@@ -19,7 +19,6 @@ export default function App() {
         <Route path="/write" element={<PostWritePage />} />
         <Route path="/edit/:id" element={<PostWritePage />} />
         <Route path="/posts/:id" element={<PostViewPage />} />
-        
       </Routes>
     </BrowserRouter>
   );
