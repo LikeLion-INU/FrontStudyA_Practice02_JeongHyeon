@@ -20,8 +20,15 @@ const Container = styled.div`
 const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 1rem;
+`;
+
+const BackButton = styled(Button)`
+  background-color: rgb(126, 126, 126);
+  &:hover {
+    background-color:rgb(94, 94, 94);
+  }
 `;
 
 export default function PostWritePage() {
@@ -30,6 +37,26 @@ export default function PostWritePage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      const fetchPost = async () => {
+        try {
+          const res = await axios.get(`/660/posts/${id}`);
+          setTitle(res.data.title);
+          setContent(res.data.content);
+        } catch (err) {
+          alert("게시글 정보를 불러오는 데 실패했습니다.");
+        }
+      };
+      fetchPost();
+    }
+    else {
+      // 새 글 작성인 경우 상태 초기화
+      setTitle('');
+      setContent('');
+    }
+  }, [id]);
 
   // 게시글 작성 완료 버튼 클릭 시 실행되는 함수
   const handleSubmit = async () => {
@@ -40,8 +67,9 @@ export default function PostWritePage() {
         userId: user.id,
         userName: user.name,
       });
-      alert("작성 완료");
+      alert("게시글 작성이 완료되었습니다");
       navigate("/");
+      console.log("복호화된 유저:", user);
     } catch (err) {
       alert("작성 실패");
     }
@@ -51,11 +79,10 @@ export default function PostWritePage() {
   const handleUpdate = async () => {
     try {
       await axios.put(`/660/posts/${id}`, {
-        ...post,
         title,
         content,
       });
-      alert("수정 완료");
+      alert("게시글 수정이 완료되었습니다");
       navigate(`/posts/${id}`);
     } catch (err) {
       alert("수정 실패");
@@ -71,6 +98,7 @@ export default function PostWritePage() {
         setContent={setContent}
       />
       <ButtonWrapper>
+        <BackButton onClick = {() => navigate(-1)}>뒤로 가기</BackButton>
         <Button 
           onClick={id ? handleUpdate : handleSubmit}
           disabled={!title || !content}

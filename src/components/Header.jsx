@@ -28,7 +28,11 @@ export default function Header() {
   const { user, logout } = useAuthStore();
 
   const handleLogout = () => {
+    const ok = window.confirm("로그아웃하시겠습니까?");
+    if (!ok) return;
+
     logout();
+    alert("로그아웃이 완료되었습니다.");
     window.location.href = '/';
   }
 

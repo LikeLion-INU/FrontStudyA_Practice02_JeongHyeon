@@ -128,7 +128,7 @@ app.post("/login", async (req, res) => {
     }
 
     // JWT 토큰 생성
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+    const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, {
       expiresIn: "1h",
     });
 
@@ -166,6 +166,7 @@ app.post("/660/posts", authenticateToken, (req, res) => {
       title,
       content,
       userId: req.user.id,
+      userName: req.user.name,
       createdAt: new Date().toISOString(),
     };
 
@@ -225,6 +226,23 @@ app.delete("/660/posts/:id", authenticateToken, checkOwnership, (req, res) => {
     writeDB(db);
 
     res.json({ message: "게시글이 삭제되었습니다", id: postId });
+  } catch (error) {
+    res.status(500).json({ message: "서버 오류", error: error.message });
+  }
+});
+
+// 게시글 상세 조회
+app.get("/660/posts/:id", authenticateToken, (req, res) => {
+  try {
+    const db = readDB();
+    const postId = parseInt(req.params.id);
+    const post = db.posts.find((p) => p.id === postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "게시글을 찾을 수 없습니다" });
+    }
+
+    res.json(post);
   } catch (error) {
     res.status(500).json({ message: "서버 오류", error: error.message });
   }

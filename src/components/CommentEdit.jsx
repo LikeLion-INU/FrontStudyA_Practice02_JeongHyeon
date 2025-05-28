@@ -4,12 +4,11 @@ import Button from "./Button";
 const Container = styled.div`
   width: 100%;
   max-width: 800px;
-  padding: 16px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-
+  margin: 2rem;
 `;
 
 const Content = styled.textarea`

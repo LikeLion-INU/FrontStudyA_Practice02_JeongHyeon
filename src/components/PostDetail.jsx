@@ -1,27 +1,31 @@
 import styled from "styled-components";
 import Button from "./Button";
+import useAuthStore from "../store/authStore";
 
 const PostTitle = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-top: 2rem;
+  padding: 1.5rem;
 `;
 
 const PostContent = styled.p`
-  font-size: 16px;
+  font-size: 1.2rem;
+  color: rgb(90, 90, 90);
   white-space: pre-line;
   line-height: 1.5;
   width: 100%;
   min-height: 50vh;
+  padding: 1.5rem;
+  box-sizing: border-box;
 `;
 
 const PostContainer = styled.div`
   width: 100%;
-  margin: 0 auto;
   padding: 1rem;
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  box-sizing: border-box;
 `;
 
 const DeleteButton = styled(Button)`
@@ -44,31 +48,49 @@ const EditButton = styled(Button)`
   }
 `;
 
-const DeleteWrapper = styled.div`
+const Wrapper = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Author = styled.div`
+  font-size: 0.9rem;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 1.5rem;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
   justify-content: flex-end;
-  margin-bottom: 1rem;
+  align-items: center;
 `;
 
 const Divider = styled.hr`
   width: 100%;
-  padding: 2px;
   border: none;
   border-top: 1px solid #ccc;
-  margin-bottom: 2rem;
 `;
 
-export default function PostDetail({ post, isOwner, onDelete, onEdit }) {
+export default function PostDetail({ post, onDelete, onEdit }) {
+  const { user } = useAuthStore();
+
+  const isAuthor = post && user?.id === post.userId;
+
   return (
     <PostContainer>
       <PostTitle>{post.title}</PostTitle>
-      {isOwner && (
-        <DeleteWrapper>
-          <DeleteButton onClick={onDelete}>삭제</DeleteButton>
-          <EditButton onClick={onEdit}>수정</EditButton>
-        </DeleteWrapper>
-      )}
+      <Wrapper>
+        <Author> 작성자: {post.userName}</Author>
+        {isAuthor && (
+          <ButtonWrapper>
+            <EditButton onClick={onEdit}>수정</EditButton>
+            <DeleteButton onClick={onDelete}>삭제</DeleteButton>
+          </ButtonWrapper>
+        )}
+      </Wrapper>
       <Divider />
       <PostContent>{post.content}</PostContent>
     </PostContainer>

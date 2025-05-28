@@ -35,8 +35,6 @@ export default function PostViewPage() {
   const [comment, setComment] = useState(''); 
   const { user } = useAuthStore();
 
-  const isOwner = post && user?.id === post.userId;
-
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -44,9 +42,25 @@ export default function PostViewPage() {
         setPost(res.data);
       } catch (err) {
         alert("게시글을 불러오는 데 실패했습니다.");
+        console.error("게시글 불러오기 실패", error);
       }
     };
 
+    const fetchComment = async () => {
+      try {
+        const saved = localStorage.getItem(`comments-${id}`);
+        if (saved) {
+          setComments(JSON.parse(saved));
+        } else {
+          setComments([]);
+        }
+      } catch (error) {
+        alert("댓글을 불러오는 데 실패했습니다.");
+        console.error("댓글 불러오기 실패", error);
+      }
+    }
+
+    fetchComment();
     fetchPost();
   }, [id]);
 
@@ -65,6 +79,8 @@ export default function PostViewPage() {
       const newComment = {
         id: Date.now(),
         content: comment,
+        userName: user.name,
+        userId: user.id,
       };
 
       const updatedComments = [...comments, newComment];
@@ -72,11 +88,15 @@ export default function PostViewPage() {
       localStorage.setItem(`comments-${id}`, JSON.stringify(updatedComments));
       setComment("");
     }
+    alert("댓글 작성이 완료되었습니다");
   }
 
   // 댓글 삭제 시 localStorage에서 삭제
   const handleCommentDelete = (commentId) => {
     const updatedComments = comments.filter((comment) => comment.id !== commentId);
+
+    const ok = window.confirm("댓글을 삭제하시겠습니까?");
+    if (!ok) return;
 
     localStorage.setItem(`comments-${id}`, JSON.stringify(updatedComments));
 
@@ -87,6 +107,9 @@ export default function PostViewPage() {
   }
 
   const handlePostDelete = async () => {
+    const ok = window.confirm("게시글을 삭제하시겠습니까?");
+    if (!ok) return;
+
     try {
       await axios.delete(`/660/posts/${post.id}`);
       alert("게시글이 삭제되었습니다.");
@@ -98,8 +121,9 @@ export default function PostViewPage() {
 
   return (
     <Container>
-      <PostDetail post={post} isOwner={isOwner} onDelete={handlePostDelete} onEdit = {() => navigate(`/edit/${post.id}`)} />
+      <PostDetail post={post} onDelete={handlePostDelete} onEdit = {() => navigate(`/edit/${post.id}`)} />
       <Divider />
+      <h3>댓글</h3>
       <CommentEdit
         comment={comment}
         setComment={setComment}

@@ -2,32 +2,48 @@
   "users": [
     {
       "id": 1,
-      "email": "test",
-      "password": "$2b$10$GzxwOum.AXDY0zSmer0CJeMiIVWzG6Bo20TRPlgsg73yDF.DwANJe",
+      "email": "test@example.com",
+      "password": "$2b$10$7wHb1qFFvjZjLTYHEh2coeWngfgTJKbSKPTn/ybfyt6Q/6AVSGL5m",
       "name": "test"
+    },
+    {
+      "id": 2,
+      "email": "테스트",
+      "password": "$2b$10$CUN6a80nCjJldibDZHVnW.2BcKffw.XBdi..ceKGFidTzFJYz3CVW",
+      "name": "테스트"
+    },
+    {
+      "id": 3,
+      "email": "HAHA@example.com",
+      "password": "$2b$10$hBdbAHXNgrFptCwUZxxYY.Fo2oK99.YAZaR6yIPcxltfJeP4hpTnC",
+      "name": "HAHA"
     }
   ],
   "posts": [
     {
       "id": 1,
-      "title": "sss",
-      "content": "ssss",
-      "userId": 1,
-      "createdAt": "2025-05-20T19:18:42.030Z"
+      "title": "새 글",
+      "content": "새 글",
+      "userId": 2,
+      "userName": "테스트",
+      "createdAt": "2025-05-28T00:02:38.436Z",
+      "updatedAt": "2025-05-28T00:07:35.933Z"
     },
     {
       "id": 2,
-      "title": "제목",
-      "content": "내용",
-      "userId": 1,
-      "createdAt": "2025-05-20T20:04:08.907Z"
+      "title": "글",
+      "content": "글",
+      "userId": 2,
+      "userName": "테스트",
+      "createdAt": "2025-05-28T00:07:30.569Z"
     },
     {
       "id": 3,
-      "title": "to rmf",
-      "content": "sodyd",
-      "userId": 1,
-      "createdAt": "2025-05-20T21:11:11.525Z"
+      "title": "제목",
+      "content": "종강\n휴학\n방학",
+      "userId": 3,
+      "userName": "HAHA",
+      "createdAt": "2025-05-28T00:16:46.421Z"
     }
   ]
 }
