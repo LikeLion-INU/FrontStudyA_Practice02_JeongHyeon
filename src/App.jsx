@@ -5,10 +5,12 @@ import PostViewPage from './pages/PostViewPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import Header from './components/Header';
+import GlobalStyle from './GlobalStyle';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <GlobalStyle />
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
